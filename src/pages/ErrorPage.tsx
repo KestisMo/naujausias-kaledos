@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import YouTube from 'react-youtube';
 import Gift from '../components/Gift/Gift';
 
@@ -62,7 +62,7 @@ const ErrorPage = () => {
   const [player, setPlayer] = useState<any>(null);
   const [showButton, setShowButton] = useState(false);
   const [showGift, setShowGift]=useState(false);
-
+console.log('player', player);
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);

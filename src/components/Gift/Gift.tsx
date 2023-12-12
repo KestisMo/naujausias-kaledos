@@ -7,7 +7,7 @@ const Gift = () => {
   const [ballsCount, setBallsCount] = useState(0);
   const countsNeeded = 2;
   const maxBalls = 1;
-
+console.log('ballsCount', ballsCount);
   useEffect(() => {
     if (counts >= countsNeeded) {
       const interval = setInterval(() => {
