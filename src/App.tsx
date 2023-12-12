@@ -6,7 +6,7 @@ import Home from './pages/Home/Home';
 
 
 const App = () => (
-  <Router>
+  <Router basename={process.env.PUBLIC_URL}>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/404" element={<ErrorPage />} />
