@@ -180,7 +180,7 @@ const Home: React.FC = () => {
         ))}
         <div style={contentStyle}>
               {isCounting ? (
-            <h1>Sveikinimas kraunasi: {counter} %</h1>
+            <h1 style={{ color: "silver", backgroundColor: "green"}}>Sveikinimas kraunasi...{counter} %</h1>
           ) : (
             <StyledButton onClick={handleButtonClick}>
               Spauskite čia! 🎄🎁

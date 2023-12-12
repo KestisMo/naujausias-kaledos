@@ -66,7 +66,7 @@ const ErrorPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
-    }, 5000);
+    }, 10000);
     return () => clearTimeout(timer);
   }, []);
 

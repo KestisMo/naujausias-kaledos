@@ -13,13 +13,16 @@ const Ball = ({ index }) => {
   `;
 
   return (
-    <BallWrapper>
+      <>
+        <h1 style={{ paddingLeft: 60 }}>Sveikinam!!!</h1>
+        <BallWrapper>
       <img
         src={process.env.PUBLIC_URL + '/koliazas.png'}
         alt='kuoma'
         style={{ width: '100%', height: '100%', borderRadius: '50%' }}
       />
     </BallWrapper>
+      </>
   );
 };
 
