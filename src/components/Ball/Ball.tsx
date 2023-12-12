@@ -14,7 +14,7 @@ const Ball = ({ index }) => {
 
   return (
       <>
-        <h1 style={{ paddingLeft: 60 }}>Sveikinam!!!</h1>
+        <h1 style={{ paddingLeft: 60 }}>Linkime kažko žalio, kažko blizgaus ir kažko valgomo!</h1>
         <BallWrapper>
       <img
         src={process.env.PUBLIC_URL + '/koliazas.png'}
