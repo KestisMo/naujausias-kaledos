@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import YouTube from 'react-youtube';
 import styled, { keyframes } from 'styled-components';
+import ErrorPage from "../ErrorPage";
 
 const blink = keyframes`
   0%, 100% {
@@ -92,8 +93,10 @@ const Home: React.FC = () => {
   const [currentGifIndexes, setCurrentGifIndexes] = useState<number[]>([]);
   const [counter, setCounter] = useState(0);
   const [isCounting, setIsCounting] = useState(false);
-  const [player, setPlayer] = useState<any>(null); 
+  const [player, setPlayer] = useState<any>(null);
   const videoId = 'JJyYWCF5BIQ';
+  const [showErrorPage, setShowErrorPage] = useState(false);
+  const [showGift, setShowGift]=useState(false);
 
   useEffect(() => {
     const fetchRandomGifs = async () => {
@@ -101,17 +104,17 @@ const Home: React.FC = () => {
         const apiKey = '8fJKn6mPOa42FNFWkbh8nVVprZpnGZ6P';
         const numGifs = 300;
         const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=christmas&limit=${numGifs}`;
-    
+
         const response = await axios.get(apiUrl);
         const gifDataArray: GifData[] = response.data.data;
-    
+
         // Initialize an empty array for storing valid URLs
         const validGifUrls: string[] = [];
-    
+
         // Use Promise.all to wait for all requests to complete
         await Promise.all(gifDataArray.map(async (gifData) => {
           const gifUrl = gifData.images.original.url;
-    
+
           // Check if the URL is valid
           try {
             await axios.head(gifUrl);
@@ -120,15 +123,15 @@ const Home: React.FC = () => {
             console.error('Invalid URL:', gifUrl);
           }
         }));
-    
+
         setGifUrls(validGifUrls);
-    
+
         const initialIndexes = Array.from({ length: validGifUrls.length }, (_, index) => index);
         setCurrentGifIndexes(initialIndexes.sort(() => Math.random() - 0.5));
       } catch (error) {
         console.error('Error fetching Giphy data:', error);
       }
-    };    
+    };
 
     fetchRandomGifs();
   }, []);
@@ -143,13 +146,13 @@ const Home: React.FC = () => {
           setCounter((prevCounter) => prevCounter + 1);
         } else {
           clearInterval(intervalId);
-          window.location.href = '/404';
+          setShowErrorPage(true);
         }
       }, 100); // 100 milliseconds interval, adjust as needed
     }
 
     return () => clearInterval(intervalId);
-  }, [counter, isCounting]);
+  }, [counter, isCounting, showErrorPage]);
 
   const handleButtonClick = () => {
     setIsCounting(true);
@@ -159,43 +162,48 @@ const Home: React.FC = () => {
       console.log("Player is not ready yet");
     }
   };
-  
+
   const onReady = (event: any) => {
     setPlayer(event.target);
     event.target.playVideo();
   };
 
+  const renderHome=()=> (
+      <AppWrapper showErrorPage={showErrorPage}>
+        <div style={containerStyle}>
+          {currentGifIndexes.map((index, i) => (
+              <div
+                  key={i}
+                  style={{
+                    ...gifStyle,
+                    backgroundImage: `url(${gifUrls[index]})`,
+                  }}
+              />
+          ))}
+          <div style={contentStyle}>
+            {isCounting ? (
+                <h1>Sveikinimas kraunasi: {counter} %</h1>
+            ) : (
+                <StyledButton onClick={handleButtonClick}>
+                  Spauskite čia! 🎄🎁
+                </StyledButton>
+            )}
+          </div>
+          <div>
+            <YouTube
+                videoId={videoId}
+                opts={{ width: '0', height: '0', playerVars: { autoplay: 0, start: 3 } }}
+                onReady={onReady}
+            />
+          </div>
+        </div>
+      </AppWrapper>
+  )
 
   return (
-    <AppWrapper>
-      <div style={containerStyle}>
-        {currentGifIndexes.map((index, i) => (
-          <div
-            key={i}
-            style={{
-              ...gifStyle,
-              backgroundImage: `url(${gifUrls[index]})`,
-            }}
-          />
-        ))}
-        <div style={contentStyle}>
-              {isCounting ? (
-            <h1 style={{ color: "silver", backgroundColor: "green"}}>Sveikinimas kraunasi {counter} %</h1>
-          ) : (
-            <StyledButton onClick={handleButtonClick}>
-              Spauskite čia! 🎄🎁
-            </StyledButton>
-          )}
-        </div>
-        <div>
-        <YouTube
-          videoId={videoId}
-          opts={{ width: '0', height: '0', playerVars: { autoplay: 0, start: 3 } }}
-          onReady={onReady}
-        />
-      </div>
-      </div>
-    </AppWrapper>
+      <>
+        {showErrorPage ? <ErrorPage showGift={showGift} setShowGift={setShowGift}/> : renderHome()}
+      </>
   );
 };
 
